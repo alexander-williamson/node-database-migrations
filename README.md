@@ -74,6 +74,8 @@ npm run migrate down
 
 > This project is no longer maintained however it's mentioned all over the place and seems pretty intuituve and simple
 
+These migrations are old-school callbacks and pretty ugly.
+
 - GitHub Repository - https://github.com/db-migrate/node-db-migrate
 - Documentation - https://db-migrate.readthedocs.io/en/latest/
 
@@ -110,6 +112,45 @@ Use the `create-migration` helper to create a migration (note you have to specif
 
 ```bash
 npx db-migrate create create-basket-table --config ./config/database.json -e local
+```
+
+An example migration file `migrations/20240429154243-alter-basket-table.js`:
+
+```javascript
+"use strict";
+
+var dbm;
+var type;
+var seed;
+
+/**
+ * We receive the dbmigrate dependency from dbmigrate initially.
+ * This enables us to not have to rely on NODE_PATH.
+ */
+exports.setup = function (options, seedLink) {
+  dbm = options.dbmigrate;
+  type = dbm.dataType;
+  seed = seedLink;
+};
+
+exports.up = function (db, callback) {
+  db.addColumn(
+    "basket",
+    "created_utc",
+    {
+      type: "int",
+    },
+    callback
+  );
+};
+
+exports.down = function (db) {
+  return db.removeColumn("basket", "created_utc");
+};
+
+exports._meta = {
+  version: 1,
+};
 ```
 
 To migrate all the way up:

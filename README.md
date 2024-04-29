@@ -69,3 +69,63 @@ And to migrate down:
 ```
 npm run migrate down
 ```
+
+# db-migrate
+
+> This project is no longer maintained however it's mentioned all over the place and seems pretty intuituve and simple
+
+- GitHub Repository - https://github.com/db-migrate/node-db-migrate
+- Documentation - https://db-migrate.readthedocs.io/en/latest/
+
+You will need the base `db-migrate` and the `db-migrate-mysql` dialect package:
+
+```bash
+npm install db-migrate
+npm install db-migrate-mysql
+```
+
+Create a `database.json` file and an environment (like dev, test, prod) target called `local`:
+
+```json
+{
+  "local": {
+    "driver": "mysql",
+    "host": "127.0.0.1",
+    "user": "basket",
+    "password": "basket",
+    "database": "basket"
+  }
+}
+```
+
+Based on the above your migrate command will be:
+
+```bash
+npx db-migrate --config config/database.json -e local
+```
+
+> Note: You have to specify the relative path to the config file if you add `db-migrate` as a `migrate` script in `package.json`
+
+Use the `create-migration` helper to create a migration (note you have to specify the `--config` even though it's probably not used):
+
+```bash
+npx db-migrate create create-basket-table --config ./config/database.json -e local
+```
+
+To migrate all the way up:
+
+```bash
+db-migrate % npx db-migrate up --config ./config/database.json -e local
+```
+
+To migrate all the way down:
+
+```bash
+db-migrate % npx db-migrate down --config ./config/database.json -e local
+```
+
+If you want to migrate down one step you can pass the `-c` (count) parameter:
+
+```bash
+db-migrate % npx db-migrate down -c 1 --config ./config/database.json -e local
+```

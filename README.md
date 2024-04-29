@@ -57,3 +57,15 @@ export const down: Migration = async ({ context: sequelize }) => {
   await sequelize.getQueryInterface().removeColumn("basket", "created_utc");
 };
 ```
+
+Then to migrate up:
+
+```bash
+npm run migrate up
+```
+
+And to migrate down:
+
+```
+npm run migrate down
+```

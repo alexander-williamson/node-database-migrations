@@ -70,6 +70,14 @@ And to migrate down:
 npm run migrate down
 ```
 
+Where `migrate` is an alias for `ts-node index.ts` in `package.json`:
+
+```
+"scripts: {
+  "migrate": "ts-node index.ts"
+}
+```
+
 # Knex
 
 Is a simple to use migration runner with a few typescript gotchas to start with but a sensible fluent function style migrator similar to Uzmug.
@@ -246,17 +254,17 @@ exports._meta = {
 To migrate all the way up:
 
 ```bash
-db-migrate % npx db-migrate up --config ./config/database.json -e local
+npx db-migrate up --config ./config/database.json -e local
 ```
 
 To migrate all the way down:
 
 ```bash
-db-migrate % npx db-migrate down --config ./config/database.json -e local
+npx db-migrate down --config ./config/database.json -e local
 ```
 
 If you want to migrate down one step you can pass the `-c` (count) parameter:
 
 ```bash
-db-migrate % npx db-migrate down -c 1 --config ./config/database.json -e local
+npx db-migrate down -c 1 --config ./config/database.json -e local
 ```

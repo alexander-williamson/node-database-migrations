@@ -85,7 +85,7 @@ Is a simple to use migration runner with a few typescript gotchas to start with 
 First add Knex and typescript - it also needs `ts-node`:
 
 ```bash
-npm i knex typescript ts-node --save-dev
+npm i knex typescript ts-node mysql --save-dev
 ```
 
 Create a configuration file using Typescript:

@@ -2,9 +2,9 @@
 
 A comparison of various database migration tools in NodeJs with examples
 
-# Umzug
+> Umzug or Knex Migrate are currently my personal choices in Node database migration libraries as they are so flexible, support async/await and TypeScript.
 
-> Umzug is currently my personal choice in Node database migration libraries as it's so flexible, supports async/await and TypeScript.
+# Umzug
 
 Supports async TypeScript & CLI support. Based on Sequelise but you aren't forced to use the ORM side. You can use raw SQL or use a fluent interface.
 
@@ -69,6 +69,96 @@ And to migrate down:
 ```
 npm run migrate down
 ```
+
+# Knex
+
+Is a simple to use migration runner with a few typescript gotchas to start with but a sensible fluent function style migrator similar to Uzmug.
+
+First add Knex and typescript - it also needs `ts-node`:
+
+```bash
+npm i knex typescript ts-node --save-dev
+```
+
+Create a configuration file using Typescript:
+
+```bash
+knex init -x ts
+```
+
+Setup an environment:
+
+```typescript
+import type { Knex } from "knex";
+
+// Update with your config settings.
+
+const config: { [key: string]: Knex.Config } = {
+  local: {
+    client: "mysql",
+    connection: {
+      host: "127.0.0.1",
+      database: "basket",
+      port: 3306,
+      user: "basket",
+      password: "basket",
+    },
+  },
+};
+
+module.exports = config;
+```
+
+Add a migration using the Knex CLI helper:
+
+```bash
+npx knex migrate:make create_basket_table
+```
+
+You can then add your implementation:
+
+```typescript
+import type { Knex } from "knex";
+
+export async function up(knex: Knex): Promise<void> {
+  return knex.schema.createTable("basket", (table) => {
+    table.increments("id");
+    table.integer("user_id").notNullable();
+  });
+}
+
+export async function down(knex: Knex): Promise<void> {
+  return knex.schema.dropTable("basket");
+}
+```
+
+To migrate up:
+
+```bash
+npx knex migrate:latest --env local
+```
+
+To migrate a singular step:
+
+```bash
+npx knex migrate:up --env local
+```
+
+To migrate all the way down:
+
+```bash
+npx knex migrate:rollback --env local
+```
+
+If you don't have a default environment and do not pass it via `--env <environment name>` you will get the following error:
+
+```text
+Requiring external module ts-node/register
+knex: Required configuration option 'client' is missing.
+Error: knex: Required configuration option 'client' is missing.
+```
+
+- See [Migration CLI documentation](https://knexjs.org/guide/migrations.html#migration-cli)
 
 # db-migrate
 
